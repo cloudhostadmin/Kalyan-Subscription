@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -187,8 +187,8 @@
     <!-- LANGUAGE SWITCH -->
     <div class="lang-switch">
         <div class="wrap">
-            <button type="button" class="lang-btn" data-lang="hi">हिन्दी</button>
-            <button type="button" class="lang-btn active" data-lang="en">English</button>
+            <button type="button" class="lang-btn active" data-lang="hi">हिन्दी</button>
+            <button type="button" class="lang-btn" data-lang="en">English</button>
         </div>
     </div>
 
@@ -199,7 +199,7 @@
             <div class="sub-heading" data-i18n="subTitle">Kalyan Rashtrabhakti Ank</div>
             <div class="sub-heading-note" data-i18n="subNote">Year 101 (2027) — New Subscription Form</div>
         </div>
-        <img src="https://raw.githubusercontent.com/cloudhostadmin/Kalyan-Subscription---2027/main/rbf_new_Sep.jpeg"
+        <img src="https://raw.githubusercontent.com/cloudhostadmin/Kalyan-Subscription---2027/main/Rashtrabhakti_ank.jpeg"
              alt="कल्याण राष्ट्रभक्ति-अङ्क" class="header-image" id="rightLogo"
              onerror="this.style.display='none'">
     </div>
@@ -214,7 +214,7 @@
                 <div class="plan-info">
                     <div class="plan-name" data-i18n="plan1Name">एक वर्ष</div>
                     <div class="plan-meta" data-i18n="plan1Meta">12 अंक — 1 वर्ष की सदस्यता</div>
-                    <div class="plan-bonus" data-i18n="planBonus">Free 3 monthly issues of Oct–Dec 2026</div>
+                    <div class="plan-bonus" data-i18n="planBonus">Free 2 monthly issues of Nov–Dec 2026</div>
                 </div>
                 <div class="plan-price">₹500</div>
             </label>
@@ -224,7 +224,7 @@
                 <div class="plan-info">
                     <div class="plan-name" data-i18n="plan5Name">पाँच वर्ष</div>
                     <div class="plan-meta" data-i18n="plan5Meta">60 अंक — 5 वर्ष की सदस्यता</div>
-                    <div class="plan-bonus" data-i18n="planBonus">Free 3 monthly issues of Oct–Dec 2026</div>
+                    <div class="plan-bonus" data-i18n="planBonus">Free 2 monthly issues of Nov–Dec 2026</div>
                 </div>
                 <div class="plan-price">₹2500</div>
             </label>
@@ -348,9 +348,9 @@ const I18N = {
     title:'कल्याण राष्ट्रभक्ति-अङ्क', subTitle:'Kalyan Rashtrabhakti Ank',
     subNote:'वर्ष १०१ (२०२७) — नवीन सदस्यता प्रपत्र',
     choosePlan:'सदस्यता चुनें',
-    plan1Name:'एक वर्ष',  plan1Meta:'12 अंक — 1 वर्ष की सदस्यता (सभी अंक मैगजीन पोस्ट से ट्रैकिंग सुविधासहित)',
-    plan5Name:'पाँच वर्ष', plan5Meta:'60 अंक — 5 वर्ष की सदस्यता (सभी अंक मैगजीन पोस्ट से ट्रैकिंग सुविधासहित)',
-    planBonus:'वर्ष 2026 (अक्टूबर–दिसम्बर) के 3 मासिक अंक निःशुल्क',
+    plan1Name:'एक वर्ष',  plan1Meta:'12 अंक — 1 वर्ष की सदस्यता',
+    plan5Name:'पाँच वर्ष', plan5Meta:'60 अंक — 5 वर्ष की सदस्यता',
+    planBonus:'वर्ष 2026 (नवम्बर–दिसम्बर) के 2 मासिक अंक निःशुल्क',
     firstName:'प्रथम नाम', phFirstName:'प्रथम नाम लिखें',
     lastName:'उपनाम',      phLastName:'उपनाम लिखें',
     addr1:'पता 1', phAddr1:'मकान / फ्लैट नं., भवन',
@@ -380,9 +380,9 @@ const I18N = {
     title:'Kalyan Rashtrabhakti Ank', subTitle:'कल्याण राष्ट्रभक्ति-अङ्क',
     subNote:'Year 101 (2027) — New Subscription Form',
     choosePlan:'Choose your subscription',
-    plan1Name:'One Year',   plan1Meta:'12 issues — 1 year subscription (All issues sent via Magazine post with tracking facilities.)',
-    plan5Name:'Five Years', plan5Meta:'60 issues — 5 year subscription (All issues sent via Magazine post with tracking facilities.)',
-    planBonus:'Free 3 monthly issues of Oct–Dec 2026',
+    plan1Name:'One Year',   plan1Meta:'12 issues — 1 year subscription',
+    plan5Name:'Five Years', plan5Meta:'60 issues — 5 year subscription',
+    planBonus:'Free 2 monthly issues of Nov–Dec 2026',
     firstName:'First Name', phFirstName:'Enter first name',
     lastName:'Last Name',   phLastName:'Enter last name',
     addr1:'Address 1', phAddr1:'House / Flat No., Building',
@@ -410,7 +410,7 @@ const I18N = {
   }
 };
 
-let LANG = 'en';
+let LANG = 'hi';
 function t(k, vars) {
     let v = (I18N[LANG] && I18N[LANG][k]) || k;
     if (vars) Object.keys(vars).forEach(x => { v = v.replace('{' + x + '}', vars[x]); });
@@ -418,7 +418,7 @@ function t(k, vars) {
 }
 
 function setLang(code) {
-    LANG = I18N[code] ? code : 'en';
+    LANG = I18N[code] ? code : 'hi';
     document.documentElement.lang = LANG;
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -566,7 +566,7 @@ function showLoading(msg) {
 function hideLoading() { document.getElementById('loadingOverlay').classList.add('hidden'); }
 
 // ── INIT ──────────────────────────────────────────────────────
-setLang(getParam('lang') || 'en');
+setLang(getParam('lang') || 'hi');
 populateFromUrl();
 
 

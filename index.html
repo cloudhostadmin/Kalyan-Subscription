@@ -118,6 +118,13 @@
 
         .char-count { text-align:right; font-size:12px; color:#999; margin-top:5px; }
 
+        /* sirf English allowed — warning */
+        .en-warn {
+            font-size:12px; color:#dc3545; margin-top:5px;
+            display:none; font-weight:600;
+        }
+        .en-warn.show { display:block; }
+
         .pincode-status { font-size:12px; margin-top:5px; padding:5px; border-radius:4px; }
         .pincode-status.loading { color:#c17817; background:#fffbf0; border:1px solid #f5e6c3; }
         .pincode-status.success { color:#28a745; background:#d4edda; }
@@ -199,7 +206,7 @@
             <div class="sub-heading" data-i18n="subTitle">Kalyan Rashtrabhakti Ank</div>
             <div class="sub-heading-note" data-i18n="subNote">Year 101 (2027) — New Subscription Form</div>
         </div>
-        <img src="https://raw.githubusercontent.com/cloudhostadmin/Kalyan-Subscription---2027/main/Rashtrabhakti_ank.jpeg"
+        <img src="https://raw.githubusercontent.com/cloudhostadmin/Kalyan-Subscription---2027/main/rbf_new_Sep.jpeg"
              alt="कल्याण राष्ट्रभक्ति-अङ्क" class="header-image" id="rightLogo"
              onerror="this.style.display='none'">
     </div>
@@ -374,6 +381,7 @@ const I18N = {
     errPlan:'कृपया सदस्यता अवधि चुनें।',
     errMobile:'कृपया सही 10 अंकों का मोबाइल नंबर भरें।',
     errEmail:'कृपया सही ईमेल आईडी भरें।',
+    onlyEnglish:'कृपया केवल अंग्रेज़ी में भरें',
     errPay:'भुगतान आरम्भ नहीं हो सका।'
   },
   en: {
@@ -406,6 +414,7 @@ const I18N = {
     errPlan:'Please select a subscription type.',
     errMobile:'Please enter a valid 10-digit mobile number.',
     errEmail:'Please enter a valid email ID.',
+    onlyEnglish:'Please type in English only',
     errPay:'Could not start payment.'
   }
 };
@@ -570,6 +579,42 @@ setLang(getParam('lang') || 'hi');
 populateFromUrl();
 
 
+// ── SIRF ENGLISH INPUT ─────────────────────────────────────────
+// Hindi/Devanagari ya koi aur script type ya paste karne par hata di
+// jayegi. Wajah: PayU aur dispatch label dono sirf Latin script sambhalte
+// hain — Devanagari aage jaakar ???? ban jata hai.
+const EN_FIELDS = ['firstName','lastName','address1','address2','address3','city','state','emailId'];
+const EN_ALLOWED = /[^A-Za-z0-9 .,\-\/()&'#@_:+]/g;
+
+EN_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    // har field ke neeche ek chhoti warning line
+    const warn = document.createElement('div');
+    warn.className = 'en-warn';
+    warn.setAttribute('data-i18n', 'onlyEnglish');
+    warn.textContent = t('onlyEnglish');
+    el.parentNode.appendChild(warn);
+
+    let timer = null;
+    const clean = () => {
+        const before = el.value;
+        const after  = before.replace(EN_ALLOWED, '');
+        if (before !== after) {
+            const pos = el.selectionStart - (before.length - after.length);
+            el.value = after;
+            try { el.setSelectionRange(Math.max(pos, 0), Math.max(pos, 0)); } catch (e) {}
+            warn.textContent = t('onlyEnglish');
+            warn.classList.add('show');
+            clearTimeout(timer);
+            timer = setTimeout(() => warn.classList.remove('show'), 2500);
+        }
+    };
+    el.addEventListener('input', clean);
+    el.addEventListener('paste', () => setTimeout(clean, 0));
+});
+
 // ── FORM SUBMIT → APPS SCRIPT (order + hash) → PAYU PAGE ─────
 document.getElementById('kalyanForm').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -584,6 +629,15 @@ document.getElementById('kalyanForm').addEventListener('submit', async function(
     const mobile = document.getElementById('mobileNumber').value.trim();
     if (!/^\d{10}$/.test(mobile)) {
         alert(t('errMobile'));
+        return;
+    }
+
+    // koi field me non-English reh gaya ho to roko
+    const badField = EN_FIELDS.map(id => document.getElementById(id))
+                              .find(el => el && EN_ALLOWED.test(el.value));
+    if (badField) {
+        alert(t('onlyEnglish'));
+        badField.focus();
         return;
     }
 

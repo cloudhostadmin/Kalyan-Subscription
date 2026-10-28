@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Devanagari font — iOS/Android/Windows sab par ek jaisa rendering.
+         Iske bina default font 'ङ्क' jaise sanyuktakshar ko toot kar 'ङक' dikha deta hai. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>कल्याण राष्ट्रभक्ति-अङ्क — New Subscription</title>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
-            font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+            font-family:'Segoe UI',Tahoma,Geneva,Verdana,'Noto Sans Devanagari',sans-serif;
             background:linear-gradient(135deg,#fff9e6 0%,#fffbf0 50%,#fff9e6 100%);
             min-height:100vh; padding:20px;
             display:flex; justify-content:center; align-items:flex-start;
@@ -52,6 +57,9 @@
         }
         .header-text { flex:1; text-align:left; }
         .header-image { width:var(--logo-size,180px); height:var(--logo-size,180px); object-fit:contain; flex-shrink:0; border-radius:6px; }
+        h1, .plan-name, .step-title, .sub-heading-note, .plan-meta, .plan-bonus, .form-hint, label {
+            font-family:'Noto Sans Devanagari','Segoe UI',Tahoma,Verdana,sans-serif;
+        }
         h1 { color:#c17817; font-size:28px; margin:0 0 10px; font-weight:700; text-shadow:1px 1px 2px rgba(193,120,23,.1); }
         .sub-heading { color:#8b6914; font-size:16px; font-weight:600; margin-top:5px; text-transform:uppercase; letter-spacing:1px; }
         .sub-heading-note { color:#666; font-size:13px; font-weight:500; margin-top:8px; font-style:italic; }

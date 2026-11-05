@@ -2,6 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Devanagari font — iOS/Android/Windows sab par ek jaisa rendering.
          Iske bina default font 'ङ्क' jaise sanyuktakshar ko toot kar 'ङक' dikha deta hai. -->
@@ -214,7 +215,7 @@
             <div class="sub-heading" data-i18n="subTitle">Kalyan Rashtrabhakti Ank</div>
             <div class="sub-heading-note" data-i18n="subNote">Year 101 (2027) — New Subscription Form</div>
         </div>
-        <img src="https://raw.githubusercontent.com/cloudhostadmin/Kalyan-Subscription/main/Bharat Mata.jpg.jpeg"
+        <img src="https://raw.githubusercontent.com/cloudhostadmin/Kalyan-Subscription/main/Bharat%20Mata.jpg.jpeg"
              alt="कल्याण राष्ट्रभक्ति-अङ्क" class="header-image" id="rightLogo"
              onerror="this.style.display='none'">
     </div>
@@ -592,7 +593,10 @@ populateFromUrl();
 // jayegi. Wajah: PayU aur dispatch label dono sirf Latin script sambhalte
 // hain — Devanagari aage jaakar ???? ban jata hai.
 const EN_FIELDS = ['firstName','lastName','address1','address2','address3','city','state','emailId'];
-const EN_ALLOWED = /[^A-Za-z0-9 .,\-\/()&'#@_:+]/g;
+const EN_ALLOWED = /[^A-Za-z0-9 .,\-\/()&'#@_:+]/g;   // replace ke liye (g zaroori)
+// .test() ke liye alag regex — 'g' wale regex me lastIndex yaad rah jata hai,
+// isliye lagatar do field jaanchne par doosri baar galat jawab aa sakta hai.
+const EN_BAD = /[^A-Za-z0-9 .,\-\/()&'#@_:+]/;
 
 EN_FIELDS.forEach(id => {
     const el = document.getElementById(id);
@@ -619,8 +623,13 @@ EN_FIELDS.forEach(id => {
             timer = setTimeout(() => warn.classList.remove('show'), 2500);
         }
     };
-    el.addEventListener('input', clean);
-    el.addEventListener('paste', () => setTimeout(clean, 0));
+    el.addEventListener('input',  clean);
+    el.addEventListener('change', clean);                    // browser autofill
+    el.addEventListener('blur',   clean);                    // field chhodte hi
+    el.addEventListener('paste',  () => setTimeout(clean, 0));
+    el.addEventListener('drop',   () => setTimeout(clean, 0));
+    // Android/iOS voice typing aur IME keyboard composition ke baad
+    el.addEventListener('compositionend', clean);
 });
 
 // ── FORM SUBMIT → APPS SCRIPT (order + hash) → PAYU PAGE ─────
@@ -641,8 +650,15 @@ document.getElementById('kalyanForm').addEventListener('submit', async function(
     }
 
     // koi field me non-English reh gaya ho to roko
+    // submit se theek pehle sab field dobara saaf karo (autofill/voice typing
+    // kabhi 'input' event fire nahi karte, isliye yahan bharosa nahi kar sakte)
+    EN_FIELDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = el.value.replace(EN_ALLOWED, '').replace(/\s+/g, ' ').trim();
+    });
+
     const badField = EN_FIELDS.map(id => document.getElementById(id))
-                              .find(el => el && EN_ALLOWED.test(el.value));
+                              .find(el => el && EN_BAD.test(el.value));
     if (badField) {
         alert(t('onlyEnglish'));
         badField.focus();
